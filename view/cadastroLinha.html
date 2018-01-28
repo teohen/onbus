@@ -1,0 +1,21 @@
+<div>
+	<div class="container padcima">
+		<form name="sugerirLinhaForm">
+			<h6><b>Antes de sugerir uma nova linha de ônibus, certifique-se de que essa linha <u>NÃO ESTÁ</u> cadastrada.</b></h6>
+			<h6>Problemas ao sugerir uma linha? Vá na seção de <b><a href="#/info/ajuda">ajuda</a></b> e tire todas as suas dúvidas!</h6>
+			<input ng-show="!naocadastrado" class="form-control" type="text" ng-model="pesquisa.linha" ng-keyup="buscaLinhasDeOnibus(pesquisa.linha)" placeholder="pesquisar linhas de ônibus"></input>
+	        <table ng-show="!naocadastrado" class="table table-bordered table-striped">
+	          <tr ng-repeat="linha in linhas">
+	            <td>{{linha.linhaOnibus}}</td>
+	          </tr>
+	        </table>
+	        <input class="checkbox-inline" type="checkbox" ng-model="naocadastrado"><label>a linha não está cadastrada</label></input>
+	        <br>
+	        <input ng-if="naocadastrado" class="form-control" type="text" ng-model="sugestao.linha" placeholder="nova linha de ônibus" required="true"></input>
+	        <h6 ng-if="naocadastrado">(Siga o padrão do sistema, separando os nomes da linha por traço <b>Ex:</b> 	VINHAIS - SÃO FRANCISCO)</h6>
+	        <button ng-if="naocadastrado" type="submit" class="btn btn-block btn-success form-control" ng-disabled="sugerirLinhaForm.$invalid" ng-click="sugerirLinha(sugestao)">Sugerir Linha</button>
+	        <br>
+        </form>  
+	</div>
+</div>
+

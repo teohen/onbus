@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="Onbus">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>onbus</title>
+    <link rel="stylesheet" href="css/lib/leaflet.css">
+    <link rel="stylesheet" href="css/lib/ngDialog.min.css">
+    <link rel="stylesheet" href="css/lib/ngDialog-theme-plain.min.css">
+    <link rel="stylesheet" href="css/lib/bootstrap.css">
+    <link rel="stylesheet" href="css/estilo.css">
+  </head>
+  <body> 
+    <div class="conteudo">
+      <div class="wrapper">
+        <div class="canvas">
+          <div class="menu">
+            <navigation-menu></navigation-menu>
+          </div>
+          <div class="conteudo">
+            <header>
+              <a><i class="fa fa-bars" aria-hidden="true"></i></a>
+              <span>onbus</span>
+            </header>
+            <main>
+              <div class="view" ng-view></div>
+            </main>
+            <footer>
+              onbus. Todos os direitos reservados.
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/ng-template" id="dialogo">
+      <div class="padding dialogo janela" ng-controller="CadastroOcorrenciaController">
+        <form name="cadastroOcorrenciaForm">
+          <b><i>Cadastre uma nova ocorrência e ajude-nos!</i></b>
+          <h6>Problemas para cadastrar? vá na seção de <b><a ng-click="tiraDialog()" href="#/info/ajuda">ajuda</a></b> da onbus e tire todas as dúvidas.</h6>
+          <input class="form-control" type="text" ng-model="ocorrencia.linha" ng-keyup="buscaLinhasDeOnibus(ocorrencia.linha)" placeholder="linha do ônibus" ng-required="true">
+          <table ng-show="tabela" class="table table-bordered table-striped">
+            <tr ng-repeat="linha in linhas">
+              <td ng-click="enviaPraLinhaDoOnibus(linha.linhaOnibus)">{{linha.linhaOnibus}}</td>
+            </tr>
+          </table>     
+          <textarea ng-show="!tabela" class="form-control" type="text" ng-model="ocorrencia.descricao" placeholder="descrição" ng-required="true"></textarea>
+          <input ng-show="!tabela" class="form-control" type="date" ng-model="ocorrencia.data" placeholder="data" ng-required="true">
+          <select ng-show="!tabela" class="form-control" ng-model="ocorrencia.tipo" ng-options="tipo.descricaoCategoria for tipo in tipos" ng-required="true">
+           <option value="">tipo da ocorrência</option> 
+          </select>      
+          <button class="btn btn-block btn-success form-control" ng-disabled="cadastroOcorrenciaForm.$invalid" ng-click="cadastrarOcorrencia(ocorrencia)">enviar</button>
+        </form>
+      </div>
+    </script>
+    <script type="text/ng-template" id="ocorrencia">
+      <div class="padding dialogo janela" id="dialogo">
+          <b><i>Detalhes da ocorrência</i></b>
+          <input value="{{ocorrenciaDialogo.linhaOnibus}}" ng-readonly="true" class="form-control" type="text"></input>
+          <textarea ng-readonly="true" class="form-control">{{ocorrenciaDialogo.descricaoMarcador}}</textarea>
+          <input value="{{ocorrenciaDialogo.dataMarcador | date: 'dd/MM/yyyy'}}" ng-readonly="true" class="form-control" type="text"></input>
+          <input value="{{ocorrenciaDialogo.descricaoCategoria}}" ng-readonly="true" class="form-control" type="text"></input>
+          <input value="Número de confirmações: {{ocorrenciaDialogo.confirmacaoMarcador}}" ng-readonly="true" class="form-control" type="text"></input>
+          <a href="#/ocorrencia/{{ocorrenciaDialogo.idMarcador}}" class="btn btn-block btn-success form-control" ng-click="confirmacaoOcorrencia()">confirmar ocorrência</a>
+      </div>
+    </script>
+    <script type="text/ng-template" id="pesquisar">
+      <div class="padding dialogo janela" id="dialogo" ng-controller="PesquisaOcorrenciaController"> 
+        <form name="pesquisaOcorrenciaForm">
+          <h4>pesquisar ocorrências </h4> 
+          <input ng-show="!tabela || pesquisa.todaslinhas" class="form-control" type="date" ng-model="pesquisa.dataInicio" required="true"></input>
+          <input ng-show="!tabela || pesquisa.todaslinhas" class="form-control" type="date" ng-model="pesquisa.dataFim" required="true"></input>     
+          <input class="checkbox-inline" type="checkbox" ng-model="pesquisa.todaslinhas"><label>todas as linhas de ônibus</label></input>
+          <input ng-if="!pesquisa.todaslinhas" class="form-control" type="text" ng-model="pesquisa.linha" ng-keyup="buscaLinhasDeOnibus(pesquisa.linha)" placeholder="linha do ônibus" required="true"></input>
+          <table ng-show="tabela && !pesquisa.todaslinhas" class="table table-bordered table-striped">
+            <tr ng-repeat="linha in linhas">
+              <td ng-click="enviaPraLinhaDoOnibus(linha)">{{linha.linhaOnibus}}</td>
+            </tr>
+          </table>
+          <div></div>
+          <input ng-show="!tabela || pesquisa.todaslinhas" class="checkbox-inline" type="checkbox" ng-model="pesquisa.todasocorrencias"><label ng-show="!tabela || pesquisa.todaslinhas" >todos os tipos de ocorrência</label></input>
+          <select ng-if="tabela || !pesquisa.todasocorrencias" class="form-control" ng-model="pesquisa.tipoOcorrencia" ng-options="tipo.descricaoCategoria for tipo in tipos" required="true">
+            <option value="">tipo da ocorrência</option> 
+          </select> 
+          <button ng-disabled="pesquisaOcorrenciaForm.$invalid" class="btn btn-block btn-success form-control" ng-click="pesquisaOcorrencia(pesquisa)">pesquisar</button>
+        </form>
+      </div>
+    </script> 
+    <script type="text/ng-template" id="ocorrenciacadastrada">
+      <div class="padding dialogo janela" id="dialogo" ng-controller="PesquisaOcorrenciaController"> 
+          <h4>Ocorrência cadastrada!</h4> 
+          <p>Obrigado por colaborar com a melhoria do transporte público. Compartilhe o seu gesto!</p>
+          <p>Facebook, Twitter, Whatsapp</p>
+          <p>Quer se tornar um usuário monitor e ajudar ainda mais? É só clicar <a href="#/monitor">aqui</a></p>
+      </div>
+    </script>     
+    <script type="text/javascript" src="js/lib/jquery.min.js"></script>
+   <!--<script type="text/javascript" src="js/lib/angular.js"></script>-->
+    <script type="text/javascript" src="js/lib/angular.min.js"></script>
+    <script type="text/javascript" src="js/lib/angular-route.js"></script>
+    <script type="text/javascript" src="js/lib/leaflet.js"></script>
+    <script type="text/javascript" src="js/lib/angular-leaflet-directive.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/config/routeConfig.js"></script>
+    <script type="text/javascript" src="js/lib/ngDialog.min.js"></script>
+    <script type="text/javascript" src="js/controllers/CadastroOcorrenciaController.js"></script>
+    <script type="text/javascript" src="js/controllers/OcorrenciaDetalheController.js"></script>
+    <script type="text/javascript" src="js/controllers/PesquisaOcorrenciaController.js"></script>
+    <script type="text/javascript" src="js/controllers/SugerirLinhaController.js"></script>
+    <script type="text/javascript" src="js/controllers/HomeController.js"></script>
+    <script type="text/javascript" src="js/controllers/InformacoesController.js"></script>
+    <script type="text/javascript" src="js/controllers/MonitorController.js"></script>
+    <script type="text/javascript" src="js/controllers/CadastroLinhaController.js"></script>
+    <script type="text/javascript" src="js/controllers/LinhaController.js"></script>
+    <script type="text/javascript" src="js/services/MarcadorService.js"></script>
+    <script type="text/javascript" src="js/services/CategoriaService.js"></script>
+    <script type="text/javascript" src="js/services/OnibusService.js"></script>
+    <script type="text/javascript" src="js/services/DescricoesService.js"></script>
+        <script type="text/javascript" src="js/services/MapaService.js"></script>
+        <script type="text/javascript" src="js/services/MonitorService.js"></script>
+  </body>
+</html>

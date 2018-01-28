@@ -1,0 +1,28 @@
+<style type="text/css">
+	.leaflet-bottom {
+    	bottom: 0px;
+	}
+</style>
+<div>
+		<div  class="mapaConfirma">
+			<leaflet lf-center="marcador" markers="marcadores"  width="100%" height="100%"></leaflet>
+		</div>
+		<div class="container">
+			<div class="conteudoComentario">
+				<h6>Problemas ao confirmar uma ocorrência? Vá na seção de <b><a href="#/info/ajuda">ajuda</a></b> e tire todas as suas dúvidas sobre confirmação de ocorrências!</h6>
+				<pre class="pre"><b>Descrição:</b><i> {{ocorrencia.descricaoMarcador}}</i><br><b>Ocorrência:</b><i> {{ocorrencia.descricaoCategoria}}</i><br><b>Linha:</b><i> {{ocorrencia.linhaOnibus}}</i><br><b>Data:</b> {{ocorrencia.dataMarcador | date: 'dd/MM/yyyy'}}<br><b>Confirmações:</b> {{ocorrencia.confirmacaoMarcador}}</pre>
+				<b>Comentários:</b>
+				<div>
+					<div ng-repeat="descricao in descricoes">
+						<div class="comentario"><b>Data:</b> {{descricao.data | date: 'dd/MM/yyyy'}}<br><b>Comentário:</b><i> {{descricao.comentario}}</i></div>
+					</div>
+			    </div>
+			    <form>
+				   	<textarea ng-model="comentario.descricao" class="form-control" placeholder="descreva algum detalhe a mais sobre a descrição dessa ocorrência (opcional)"></textarea>
+				   	<button type="submit" class="btn btn-block btn-success form-control" ng-click="cadastrarComentario(comentario)">Confirmar ocorrência</button>
+				</form>
+			</div>
+	    </div>
+</div>
+
+

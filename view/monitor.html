@@ -1,0 +1,21 @@
+<div class="container padcima conteudoComentario">
+	<div class="row tes">
+		<figure>
+			<figcaption class="bc1">
+				<h4 ng-show="!monitor.form" class="cc1">o que é um usuário monitor?</h4>
+				<p ng-show="!monitor.form">O usuário monitor é um colaborador da onbus. Algumas infomações armazenadas no nosso banco de dados necessitam da confirmação de alguém com o status de colaborador para que se tornem mais relevantes, ou para que fiquem disponíveis para o público.</p>
+				<h4 ng-show="!monitor.form" class="cc1">como é feita a colaboração de um usuário monitor?</h4>
+				<p ng-show="!monitor.form">Quando cadastrado no nosso sistema, o monitor informa um meio de contato via internet. A onbus entrará em contato com o monitor, caso precise da sua confirmação em alguma informação do nosso banco de dados.</p>
+				<p ng-show="!monitor.form"><b>Exemplo:</b> um monitor que cadastra o seu e-mail como contato, recebrá um link por e-mail solicitando a  confirmação da existência de uma determinada ocorrência ou de uma linha de ônibus armazenada em nosso sistema.</p>
+				<h4 ng-show="!monitor.form" class="cc1">benefícios de ser um monitor</h4>
+				<p ng-show="!monitor.form" >Ao se tornar um monitor, além de contribuir diretamente para o funcionamento da onbus, o usuário será devidamente creditado por sua ajuda, entrando na lista de colaboradores da onbus, exposta <a href="#/info/colaboradores/">aqui</a>. Além disso, será convidado para participar dos grupos de colaboradores da onbus nas mídias sociais, onde assuntos relevantes para a plataforma são debatidos. Ao contribuir regularmente, o monitor subirá seu status na onbus e poderá participar dos debates, decisões e mudanças internas da plataforma.</p>
+				<form name="cadastroMonitorForm">
+					<input ng-required="true" class="checkbox-inline" type="checkbox" ng-model="monitor.form"><b> li, compreendi e quero me tornar um monitor</b></input>
+					<input ng-show="monitor.form" class="form-control" type="text" ng-model="monitor.nome" placeholder="escolha um nome" ng-required="true"></input>
+					<input ng-show="monitor.form" class="form-control" type="email" ng-model="monitor.email" placeholder="digite o seu e-mail para contato" ng-required="true"></input>
+					<button ng-show="monitor.form" ng-disabled="cadastroMonitorForm.$invalid" class="btn btn-block btn-success form-control" ng-click="cadastroMonitor(monitor)">confirmar</button>
+				</form>
+			</figcaption>	
+		</figure>
+	</div>
+</div>
